@@ -4,8 +4,21 @@ const uploadToCloudinary = require("../utils/uploadToCloudinary")
 
 module.exports.getAllProducts = async (req, res) => {
     try {
-        const products = await ProductModel.find()
-        res.json(products)
+
+        const {limit, sort} = req.query
+        
+        const query = ProductModel.find()
+
+        if(limit) {
+          query.limit(parseInt(limit))
+        }
+
+        if(sort) {
+          query.sort(sort)
+        }
+
+         const products = await query
+         res.json(products)
     } catch (error) {
       console.log(error)
         res.status(500).json({ message : "Error fetching products"})
